@@ -1,0 +1,25 @@
+mkdir OnlineSaleDemo
+cd OnlineSaleDemo
+dotnet new sln -n OnlineSaleDemo
+mkdir src
+cd src  
+dotnet new webapp -n ServerSide -lang "C#" -f netcoreapp3.1
+cd ServerSide
+dotnet add package Microsoft.EntityFrameworkCore --version 5.0.5
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 5.0.5
+dotnet add package Microsoft.EntityFrameworkCore.Design --version 5.0.5
+dotnet ef dbcontext scaffold "Data Source=HOME-PC;Initial Catalog=WideWorldImporters;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False" Microsoft.EntityFrameworkCore.SqlServer --context-dir Data --output-dir Models
+cd ../..
+mkdir test
+cd test 
+dotnet new nunit -n ServerSide.tests -lang "C#" -f netcoreapp3.1
+cd ../
+dotnet sln add src/ServerSide/ServerSide.csproj
+dotnet sln add test/ServerSide.tests/ServerSide.tests.csproj
+
+dotnet add test/ServerSide.tests/ServerSide.tests.csproj reference src/ServerSide/ServerSide.csproj
+
+cd test/ServerSide.tests
+dotnet add package NSubstitute
+dotnet add package NSubstitute.Analyzers.CSharp
+
